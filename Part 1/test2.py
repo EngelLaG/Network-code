@@ -48,6 +48,7 @@ def analyze_packet(packet):
     network_id_src = get_network_id(ip_src)
     network_id_dst = get_network_id(ip_dst)
 
+    #Creating Class Identefier Function
     def get_ip_class(ip_addr):
         if ip_addr.startswith('10.') or ip_addr.startswith('172.16.') or ip_addr.startswith('192.168.'):
             return 'Class C'
@@ -58,6 +59,8 @@ def analyze_packet(packet):
     
     IP_class_src = get_ip_class(ip_src)
     IP_class_dst = get_ip_class(ip_dst)
+
+    
 
 
     
