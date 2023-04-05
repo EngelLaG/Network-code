@@ -1,4 +1,5 @@
 from scapy.all import *
+import ipaddress
 
 def analyze_packet(packet):
     # Check if the packet is a valid IP packet
@@ -31,13 +32,33 @@ def analyze_packet(packet):
     src_ip_type = 'Private' if is_private_ip(ip_src) else 'Public'
     dst_ip_type = 'Private' if is_private_ip(ip_dst) else 'Public'
 
-    # Print packet information
+    def get_network_id(ip_addr):
+        # Create an IPv4Address object with the specified IP address
+        ip_addr = ipaddress.IPv4Address(ip_addr)
+        
+        # Get the IPv4Network object for the network containing the IP address
+        network = ipaddress.IPv4Network(f"{ip_addr}/24", strict=False)
+        
+        # Get the network ID of the IP address
+        network_id = str(network.network_address)
+        
+        return network_id
+
+    # Usage of Network id function
+    network_id_src = get_network_id(ip_src)
+    network_id_dst = get_network_id(ip_dst)
+   
+
     print(f'IP Packet ({packet_type})')
     print(f'\tSource: {ip_src} ({src_ip_type})')
     print(f'\tDestination: {ip_dst} ({dst_ip_type})')
     print(f'\tProtocol: {ip_proto}')
     print(f'\tSize: {ip_size} bytes')
-    print(f'\tTTL: {ip_ttl}\n')
+    print(f'\tTTL: {ip_ttl}')
+    print(f'\tNetwrok Source ID: {network_id_src}')
+    print(f'\tNetwrok Destination ID: {network_id_dst}\n')
+   
+  
 
 # Sniff IP packets and analyze them
 sniff(filter='ip', prn=analyze_packet)
