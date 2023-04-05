@@ -47,7 +47,20 @@ def analyze_packet(packet):
     # Usage of Network id function
     network_id_src = get_network_id(ip_src)
     network_id_dst = get_network_id(ip_dst)
-   
+
+    def get_ip_class(ip_addr):
+        if ip_addr.startswith('10.') or ip_addr.startswith('172.16.') or ip_addr.startswith('192.168.'):
+            return 'Class C'
+        elif ip_addr.startswith('172.') or ip_addr.startswith('192.'):
+            return 'Class B'
+        else:
+            return 'Class A'
+    
+    IP_class_src = get_ip_class(ip_src)
+    IP_class_dst = get_ip_class(ip_dst)
+
+
+    
 
     print(f'IP Packet ({packet_type})')
     print(f'\tSource: {ip_src} ({src_ip_type})')
@@ -55,8 +68,10 @@ def analyze_packet(packet):
     print(f'\tProtocol: {ip_proto}')
     print(f'\tSize: {ip_size} bytes')
     print(f'\tTTL: {ip_ttl}')
-    print(f'\tNetwrok Source ID: {network_id_src}')
-    print(f'\tNetwrok Destination ID: {network_id_dst}\n')
+    print(f'\tNetwork Source ID: {network_id_src}')
+    print(f'\tNetwork Destination ID: {network_id_dst}')
+    print(f'\tSource Class/Notation: {IP_class_src}')
+    print(f'\tDestination Class/Notation: {IP_class_dst}\n')
    
   
 
