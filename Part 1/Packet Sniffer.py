@@ -22,7 +22,7 @@ def analyze_packet_ether(packet):
         packet_type = 'Unicast'
 
     # Print packet information
-    print(f'======================================================================================')
+    print(f'==================================================================================================================================================')
     print(f'Ethernet Packet ({packet_type})')
     print(f'\tSource: {eth_src}')
     print(f'\tDestination: {eth_dst}')
@@ -151,5 +151,5 @@ def analyze_packet(packet):
 
 # Sniff IP packets and analyze them
 sniff(filter='ip', prn=analyze_packet, count = 1) 
-sniff(filter='ether', prn=analyze_packet_ether, count = 1)
+sniff(prn=analyze_packet_ether, count = 1)
 
