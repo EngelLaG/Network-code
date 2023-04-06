@@ -60,10 +60,40 @@ def analyze_packet(packet):
     IP_class_src = get_ip_class(ip_src)
     IP_class_dst = get_ip_class(ip_dst)
 
-    
+    def classify_ports(packet):
+        if TCP in packet:
+            sport = packet[TCP].sport
+            if sport < 1024:
+                print(f"{packet[IP].src}:{sport} - Well-known port")
+            elif sport < 49152:
+                print(f"{packet[IP].src}:{sport} - Registered port")
+            else:
+                print(f"{packet[IP].src}:{sport} - Dynamic port")
+        else:
+            print("Not a TCP packet")
 
+    def get_transport_protocol(packet):
+        # List of supported transport layer protocols
+        protocols = {
+            1: "ICMP",
+            2: "IGMP",
+            6: "TCP",
+            17: "UDP",
+            41: "IPv6",
+            89: "OSPF",
+            132: "SCTP"
+        }
 
-    
+        # Extract the protocol type
+        if packet.haslayer(IP):
+            protocol_num = packet[IP].proto
+            protocol_name = protocols.get(protocol_num, "Unknown")
+            return protocol_name
+        else:
+            return "Unknown"
+    # Extract transport layer protocol information
+    transport_proto = get_transport_protocol(packet)
+        
 
     print(f'IP Packet ({packet_type})')
     print(f'\tSource: {ip_src} ({src_ip_type})')
@@ -74,9 +104,14 @@ def analyze_packet(packet):
     print(f'\tNetwork Source ID: {network_id_src}')
     print(f'\tNetwork Destination ID: {network_id_dst}')
     print(f'\tSource Class/Notation: {IP_class_src}')
-    print(f'\tDestination Class/Notation: {IP_class_dst}\n')
-   
-  
+    print(f'\tDestination Class/Notation: {IP_class_dst}')
+    print(f'\tTransport Protocol: {transport_proto}')
+    print(f'\tPort Type:')
+    classify_ports(packet)
+    
+
 
 # Sniff IP packets and analyze them
-sniff(filter='ip', prn=analyze_packet)
+sniff(filter='ip', prn=analyze_packet, count = 1) 
+
+
