@@ -60,7 +60,7 @@ def analyze_packet(packet):
     src_ip_type = 'Private' if is_private_ip(ip_src) else 'Public'
     dst_ip_type = 'Private' if is_private_ip(ip_dst) else 'Public'
 
-
+    # Code used for the CIDR notation
     ip_src_cidr = str(ipaddress.IPv4Network(ip_src + '/32', strict=False).with_prefixlen)
     ip_dst_cidr = str(ipaddress.IPv4Network(ip_dst + '/32', strict=False).with_prefixlen)
     broadcast_ip = str(ipaddress.IPv4Network(ip_dst + '/32', strict=False).broadcast_address)
@@ -94,7 +94,8 @@ def analyze_packet(packet):
     
     IP_class_src = get_ip_class(ip_src)
     IP_class_dst = get_ip_class(ip_dst)
-
+    
+    # Function used to Identify the ports 
     def classify_ports(packet):
         if TCP in packet:
             sport = packet[TCP].sport
@@ -137,7 +138,7 @@ def analyze_packet(packet):
     # Extract transport layer protocol information
     transport_proto = get_transport_protocol(packet)
         
-
+    # Showing the Data
     print(f'IP Packet ({packet_type})')
     print(f'\tSource: {ip_src} ({src_ip_type})')
     print(f'\tSource CIDR: {ip_src_cidr}')
