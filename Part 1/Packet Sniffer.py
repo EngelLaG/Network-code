@@ -98,14 +98,22 @@ def analyze_packet(packet):
     def classify_ports(packet):
         if TCP in packet:
             sport = packet[TCP].sport
+            dport = packet[TCP].dport
             if sport < 1024:
                 print(f"{packet[IP].src}:{sport} - Well-known port")
             elif sport < 49152:
                 print(f"{packet[IP].src}:{sport} - Registered port")
             else:
                 print(f"{packet[IP].src}:{sport} - Dynamic port")
+            if dport < 1024:
+                print(f"{packet[IP].dst}:{dport} - Well-known port")
+            elif dport < 49152:
+                print(f"{packet[IP].dst}:{dport} - Registered port")
+            else:
+                print(f"{packet[IP].dst}:{dport} - Dynamic port")
         else:
             print("Not a TCP packet")
+
 
     def get_transport_protocol(packet):
         # List of supported transport layer protocols
@@ -144,8 +152,9 @@ def analyze_packet(packet):
     print(f'\tSource Class/Notation: {IP_class_src}')
     print(f'\tDestination Class/Notation: {IP_class_dst}')
     print(f'\tApplication Type/Transport Protocol: {transport_proto}')
-    print(f'\tPort Type:')
+    print(f'\tPort Type for Source and Destination:')
     classify_ports(packet)
+    
     
 
 
