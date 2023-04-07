@@ -21,13 +21,38 @@ def analyze_packet_ether(packet):
     else:
         packet_type = 'Unicast'
 
+    def get_layer(ip_pkt):
+        # Extract the Ethernet layer
+        eth = ip_pkt.getlayer(Ether)
+
+        # Determine the highest layer that the IP packet has
+        if ip_pkt.haslayer(Raw):
+            return "Application"
+        elif ip_pkt.haslayer(TCP):
+            return "Transport"
+        elif ip_pkt.haslayer(IP):
+            return "Network"
+        elif eth.type == 0x0806:
+            return "Data Link"
+        elif eth.type == 0x0800:
+            return "Network"
+        else:
+            return "Physical"
+
+    # Create an IP packet to test the function
+    ip_pkt = IP(dst="8.8.8.8")/TCP(dport=80)/b"Hello, world!"
+
+    # Get the layer of the IP packet
+    layer = get_layer(ip_pkt)
+
     # Print packet information
     print(f'==================================================================================================================================================')
     print(f'Ethernet Packet ({packet_type})')
     print(f'\tSource: {eth_src}')
     print(f'\tDestination: {eth_dst}')
     print(f'\tType: 0x{eth_type:04x}')
-    print(f'\tSize: {eth_size} bytes\n')
+    print(f'\tSize: {eth_size} bytes')
+    print(f"\tThis IP packet is from the {layer} layer.\n")
 
 def analyze_packet(packet):
     # Check if the packet is a valid IP packet
@@ -137,6 +162,7 @@ def analyze_packet(packet):
             return "Unknown"
     # Extract transport layer protocol information
     transport_proto = get_transport_protocol(packet)
+    
         
     # Showing the Data
     print(f'IP Packet ({packet_type})')
