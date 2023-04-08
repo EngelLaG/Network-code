@@ -39,10 +39,8 @@ def analyze_packet_ether(packet):
         else:
             return "Physical"
 
-    # Create an IP packet to test the function
-    ip_pkt = IP(dst="8.8.8.8")/TCP(dport=80)/b"Hello, world!"
-
     # Get the layer of the IP packet
+    ip_pkt = packet.getlayer(IP)
     layer = get_layer(ip_pkt)
 
     # Print packet information
